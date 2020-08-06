@@ -1,0 +1,141 @@
+void delete_user(int index, int n, struct user_details allusers[])
+{
+	FILE *fptr=fopen("user.bin", "wb");
+
+	for (int i=index; i<n; i++)
+   		alluser[i]=alluser[i+1];
+
+	fwrite(allflight,sizeof(struct flight_det),--n,f);
+
+	printf("Flight Record Deleted!!\n");
+}
+
+
+void admin_menu(int acode)
+{
+	system("clear");
+
+	char ch, file[10];
+	int n,index;
+	struct flight_det flight, allflight[20];
+
+		f=fopen(file,"rb+");
+   	 n=read_det(acode, allflight);
+   	 index=search(n, allflight);
+   	 if (index==-1)
+   		 printf("\nFlight details not found!!\n");
+   	 else
+   		 modify(index,n,allflight);
+   	 fclose(f);
+
+
+	 f=fopen(file,"rb");
+   	 n=read_det(acode, allflight);
+   	 index=search(n, allflight);
+   	 if (index==-1)
+   		 printf("\nFlight details not found!!\n");
+   	 else
+   		 {
+   		 f=fopen(file,"wb");
+   		 delete(index,n,allflight);
+   		 }
+   	 fclose(f);
+
+f=fopen(file,"rb");
+   	 n=read_det(acode, allflight);
+   	 index=search(n, allflight);
+   	 if (index==-1)  
+   		 printf("\nFlight code does not exist!!\n");
+   	 else
+   	 {
+printf("ACODE FCODE SOURCE	DESTINATION  DEPARTURE ARRIVAL	DAY            	ADULT FARES                	CHILD FARES\n");
+printf("                                                                	FIRST	BUSINESS  ECONOMY 	FIRST	BUSINESS  ECONOMY\n");
+   		 display(index, allflight);
+   	 }
+   	 fclose(f);
+
+
+void update()
+{
+	struct user_details user;
+	int index=-1, i=0;
+	char search[40];
+
+	printf("UPDATE USER PROFILE\n\n");
+
+	printf("Username of required account: ");
+	scanf("%s", search);
+
+	FILE *fptr=fopen("user.bin", "rb");
+
+	while(fread(&user, sizeof(struct user_details), 1, fptr))
+	{
+		i++;
+		if(strcmp(user.username, search)==0)
+		{	index=i;
+			break;
+		}
+
+	}
+
+	fclose(fptr);
+
+	if(index==-1)
+	{
+		printf("\n\nUser NOT FOUND...!!!\n");
+		printf("Either username DOESN'T EXIST or INVALID...!!!\n");
+	}
+		
+	else
+	{	printf("\nEnter new details\n");
+
+		printf("USERNAME: ");
+		scanf(" %[^\n]", all_users[index].username);
+
+		printf("PASSWORD: ");
+		scanf(" %[^\n]", all_users[index].password);
+
+		printf("\nName: ");
+		scanf(" %[^\n]", all_users[index].name);
+
+		printf("\nAddress:\n");
+		printf("Street: ");
+		scanf(" %[^\n]", all_users[index].address.street);
+	
+		printf("City: ");
+		scanf(" %[^\n]", all_users[index].address.city);
+
+		printf("Pincode: ");
+		scanf(" %[^\n]", all_users[index].address.pincode);
+
+		printf("State: ");
+		scanf(" %[^\n]", all_users[index].address.state);
+
+		printf("\nNationality: ");
+		scanf(" %[^\n]", all_users[index].nationality);
+
+		printf("Mobile: ");
+		scanf(" %[^\n]", all_users[index].mobile);
+
+		printf("Email ID: ");
+		scanf(" %[^\n]", all_users[index].email);
+
+		printf("\nEnter DATE in dd mm yyyy FORMAT\n");
+		printf("Date of birth: ");
+		scanf("%d %d %d", &all_users[index].dob.day, &all_users[index].dob.month, &all_users[index].dob.year);
+
+		printf("\nAge: ");
+		scanf("%d", &all_users[index].age);
+
+		printf("\nF: Female M: Male T:Transgender O:Other\n");
+		printf("Gender: ");
+		scanf(" %c", &all_users[index].gender);	
+
+		fseek(fptr, 0, SEEK_SET);
+		fwrite(&all_users, sizeof(struct user_details), count, fptr);
+
+		printf("\n\nUPDATED USER PROFILE SUCCESSFULLY...!!!\n");
+	}
+
+	fclose(fptr);
+}
